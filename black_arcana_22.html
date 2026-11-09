@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>THE BLACK ARCANA — آزمون تاروت گاثیک</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;700&family=Vazirmatn:wght@400;600;800&display=swap');
+:root{--bg:#050505;--paper:#e9e4dc;--gray:#aaa39b;--line:#4d4845;--red:#8e1d27}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 0,#211c1e 0,#050505 60%);color:var(--paper);font-family:Vazirmatn,Tahoma,sans-serif;min-height:100vh}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.1;background:repeating-linear-gradient(0deg,transparent 0 4px,#fff 5px),repeating-linear-gradient(90deg,transparent 0 7px,#fff 8px);mix-blend-mode:overlay}
+main{max-width:1000px;margin:auto;padding:24px 16px 60px}.shell{border:1px solid #77716c;outline:1px solid #272322;outline-offset:7px;padding:clamp(18px,4vw,42px);background:#080808ed;position:relative}
+.shell:before{content:"✦ ☽ ✦";position:absolute;top:9px;right:15px;letter-spacing:5px}.shell:after{content:"✦ ☽ ✦";position:absolute;bottom:9px;left:15px;letter-spacing:5px}
+header{text-align:center;padding:20px 0 25px}.brand{font:700 14px 'Cormorant Garamond',serif;letter-spacing:5px;color:#c9c1b8}.title{font-size:clamp(32px,6vw,60px);margin:8px 0;line-height:1.3;text-shadow:0 0 20px #aaa2}.sub{color:#aaa;line-height:2;max-width:650px;margin:auto}
+.divider{display:flex;align-items:center;gap:12px;color:#a9a19a;margin:20px 0}.divider:before,.divider:after{content:"";height:1px;background:#514b47;flex:1}
+button{font:inherit;cursor:pointer}.btn{border:1px solid #d8d0c5;color:#eee;background:transparent;padding:12px 20px;transition:.2s}.btn:hover{background:#eee;color:#050505}.btn.primary{background:#e8e1d8;color:#050505}.btn:disabled{opacity:.35;cursor:not-allowed}
+.progress{height:3px;background:#292626}.progress span{height:100%;display:block;background:#e9e4dc;width:0;transition:width .35s}.meta{display:flex;justify-content:space-between;color:#999;font-size:12px;margin:8px 0 20px}
+.q{font-size:clamp(20px,3vw,27px);line-height:1.8;margin:25px 0}.answers{display:grid;gap:11px}.answer{width:100%;display:flex;align-items:center;gap:12px;text-align:right;border:1px solid #48423f;background:#111;color:#eee;padding:14px 16px}.answer:hover{border-color:#ddd;background:#1d1b1b}.answer.selected{background:#e8e1d8;color:#050505}.rune{font-size:20px}
+.controls{display:flex;justify-content:space-between;gap:10px;margin-top:24px}.hint{text-align:center;color:#777;font-size:12px;margin-top:16px}
+#result{display:none}.resultGrid{display:grid;grid-template-columns:minmax(230px,350px) 1fr;gap:30px;align-items:start}.cardWrap{perspective:1000px}.tarot{width:100%;max-width:350px;display:block;margin:auto;filter:drop-shadow(0 20px 25px #000);animation:rise 1.1s ease both}.resultText h2{font-size:clamp(26px,4vw,40px);margin:0}.latin{font:700 14px 'Cormorant Garamond',serif;letter-spacing:4px;color:#aaa}.tag{font-size:18px;color:#cfc6bc;margin:8px 0 18px}.resultText p{line-height:2;color:#d0cbc5}.resultText h3{color:#e9e4dc;margin:24px 0 5px}.small{color:#8c8580;font-size:12px}.toast{color:#aaa;border-top:1px solid #444;padding-top:14px;margin-top:18px}
+@keyframes rise{from{opacity:0;transform:translateY(40px) rotateY(12deg)}to{opacity:1;transform:none}}
+@media(max-width:700px){.resultGrid{grid-template-columns:1fr}.tarot{max-width:280px}.resultText{text-align:right}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body><main><section class="shell">
+<header><div class="brand">☽ THE BLACK ARCANA ☾</div><h1 class="title">آرکانای سیاه</h1><div class="sub">۲۲ آرکانای بزرگ · آزمون شخصیت گاثیک<br>ده پرسش برای عبور از پرده‌ی سایه‌ها و دیدن کارت درونی تو.</div></header>
+<div id="quiz"><div class="divider">پرده‌ی نخست · ده نشانه</div><div class="progress"><span id="bar"></span></div><div class="meta"><span id="counter">پرسش ۱ از ۱۰</span><span>به ندای درونت گوش کن</span></div><div id="question" class="q"></div><div id="answers" class="answers"></div><div class="controls"><button class="btn" id="back" disabled>قبلی</button><button class="btn primary" id="forward" disabled>ادامه ✦</button></div><div class="hint">این آزمون برای سرگرمی و خودشناسی نمادین است، نه تشخیص روان‌شناختی یا پیش‌گویی.</div></div>
+<div id="result"><div class="divider">پرده‌ی دوم · کارت تو بیدار می‌شود</div><div class="resultGrid"><div class="cardWrap" id="card"></div><div class="resultText"><div class="latin" id="latin"></div><h2 id="name"></h2><div class="tag" id="tag"></div><div id="details"></div><div class="toast" id="scores"></div></div></div><div class="controls"><button class="btn" onclick="restart()">↻ آزمون دوباره</button><button class="btn primary" onclick="window.print()">چاپ / ذخیره PDF</button></div></div>
+</section></main>
+<script>
+const Q=[
+["در دل یک شب بی‌ماه، کجا می‌روی؟",["به دنبال صدای مرموز جنگل","به برج خاموشی برای فکر کردن","به جشن عجیب و ناشناخته","به جایی که بتوانم سرنوشت را عوض کنم"]],
+["وقتی حقیقت تلخی آشکار می‌شود…",["به شهودم اعتماد می‌کنم","در سکوت معنایش را می‌سنجم","امید را از دست نمی‌دهم","هرچه دروغین است فرو می‌ریزم"]],
+["کدام شیء را از دخمه‌ای باستانی برمی‌داری؟",["آینه‌ای مه‌آلود","فانوسی فرسوده","ستاره‌ای نقره‌ای","کلیدی برای دروازه‌ی ممنوع"]],
+["دیگران تو را بیشتر چگونه می‌بینند؟",["مرموز و حساس","عمیق و مستقل","گرم و الهام‌بخش","قوی و دگرگون‌کننده"]],
+["قدرت جادویی دلخواهت چیست؟",["دیدن رؤیاها و نشانه‌ها","دانستن رازهای جهان","شفا دادن روح‌ها","آفرینش واقعیت با اراده"]],
+["در رابطه با گذشته…",["هنوز به رازهایش فکر می‌کنم","از آن درس می‌گیرم، تنها","با عشق رهایش می‌کنم","پایانش می‌دهم و از نو می‌سازم"]],
+["کدام مکان حس آشنایی دارد؟",["دریاچه‌ی مه‌گرفته","کتابخانه‌ی زیرزمینی","باغی زیر نور ستاره","کلیسای ویران در طوفان"]],
+["وقتی کسی آسیب‌پذیر است…",["حس ناگفته‌هایش را می‌فهمم","بی‌قضاوت گوش می‌دهم","به او امید و آرامش می‌دهم","از او دفاع می‌کنم"]],
+["کدام نماد را روی انگشترت حک می‌کنی؟",["هلال ماه","فانوس","ستاره","صاعقه"]],
+["در آستانه‌ی ناشناخته…",["به نشانه‌ها گوش می‌دهم","قدم آهسته و آگاهانه برمی‌دارم","با امید پیش می‌روم","بی‌هراس جهش می‌کنم"]]
+];
+const A=[
+["ماه","XVIII · THE MOON","شهود، رؤیا و راز","تو از جنس مه و نیمه‌روشنایی هستی. تخیل غنی و حساسیتت باعث می‌شود لایه‌هایی را ببینی که از نگاه دیگران پنهان می‌مانند.","شهود، خلاقیت و همدلی عمیق","گاهی ترس یا خیال می‌تواند جای واقعیت را بگیرد؛ شهود را با شواهد همراه کن.","احساساتت را بنویس و به خودت فرصت بده تا میان ترس و دریافت درونی فرق بگذاری.","ماه، دو برج، آب و راهی در مه"],
+["گوشه‌نشین","IX · THE HERMIT","خرد، خلوت و جست‌وجوی حقیقت","تو چراغ خودت را در تاریکی حمل می‌کنی. خلوت برایت فرصتی برای فهمیدن است؛ پاسخ‌های آماده قانعت نمی‌کنند و ترجیح می‌دهی حقیقت را با تجربه کشف کنی.","استقلال، تمرکز و بینش","ممکن است بیش از حد از دیگران فاصله بگیری و همه‌چیز را تنهایی به دوش بکشی.","چراغت را گاهی با دیگران شریک شو؛ صمیمیت از عمق تو کم نمی‌کند.","فانوس، عصا و قله‌ی سرد"],
+["ستاره","XVII · THE STAR","امید، ترمیم و الهام","در تو نوری آرام برای بازسازی وجود دارد. حتی پس از روزهای سخت، می‌توانی امکان تازه‌ای ببینی و به اطرافیانت امید ببخشی.","مهربانی، امید و الهام‌بخشی","گاهی خوش‌بینی باعث می‌شود نیازهای خودت یا محدودیت‌های واقعی را نادیده بگیری.","امیدت را با قدم‌های کوچک و واقعی همراه کن؛ تو نیز سزاوار مراقبتی.","ستاره‌ی هشت‌پر، آب و آسمان شب"],
+["برج","XVI · THE TOWER","دگرگونی، حقیقت و رهایی","تو ساختارهای پوسیده را به چالش می‌کشی. حقیقت را به آرامش مصنوعی ترجیح می‌دهی و قدرتت در بازسازی پس از فروپاشی است. برج نماد تغییر است، نه بداقبالی.","شجاعت، صداقت و انعطاف در بحران","ممکن است از روی خشم یا بی‌صبری چیزی را زودتر از موعد خراب کنی.","قبل از شکستن دیوار، مسیر عبور را بساز؛ تغییر آگاهانه ماندگارتر است.","برج سنگی، صاعقه و شعله"],
+["کاهنه‌ی اعظم","II · THE HIGH PRIESTESS","راز، سکوت و دانایی درونی","تو نگهبان جهان‌های پنهانی. مشاهده‌گر، آرام و شهودی هستی و لازم نمی‌بینی هرچه می‌دانی آشکار کنی.","صبر، شهود و مرزبندی سالم","سکوت طولانی ممکن است دیگران را از فهمیدن نیازهایت محروم کند.","در رابطه‌ی امن، بخشی از جهان درونی‌ات را به اشتراک بگذار.","پرده، ستون‌های دوگانه و هلال ماه"],
+["مرگ","XIII · DEATH","پایان، پوست‌اندازی و تولد دوباره","این کارت نماد مرگ فیزیکی نیست؛ نشانه‌ی پایان یک فصل و دگرگونی است. تو توان رها کردن نسخه‌های قدیمی خودت را داری.","رهایی، سازگاری و شروع دوباره","ممکن است احساسات ناشی از پایان را سریع کنار بزنی.","به پایان‌ها فرصت سوگواری بده؛ لازم نیست فوراً به شروع تبدیل شوند.","اسکلت نمادین، گل سفید و دروازه"],
+["شیطان","XV · THE DEVIL","میل، کاریزما و مواجهه با سایه","این کارت به معنای شرارت نیست؛ از شناخت میل، جذابیت و زنجیرهایی حرف می‌زند که گاهی خودمان انتخاب می‌کنیم. انرژی تو خام و نافذ است.","جسارت، شور و کاریزما","وابستگی یا افراط ممکن است آزادی‌ات را محدود کند.","از خود بپرس: این خواسته انتخاب من است یا عادتی که مرا در بند کرده؟","شاخ‌ها، زنجیرهای گسستنی و شعله"],
+["امپراتریس","III · THE EMPRESS","آفرینش، احساس و فراوانی","تو توان پرورش ایده‌ها و رابطه‌ها را داری. هنر، زیبایی، طبیعت و پیوند عاطفی برایت مهم‌اند؛ محبتت ملموس و زنده است.","خلاقیت، سخاوت و مراقبت","گاهی نیازهای دیگران را بر خودت مقدم می‌کنی.","همان‌قدر که برای دیگران فضا می‌سازی، برای خودت نیز جا نگه دار.","تاج، گل‌های تیره و هلال ماه"],
+["جادوگر","I · THE MAGICIAN","اراده، مهارت و آفرینش","تو ایده را به عمل تبدیل می‌کنی. ابتکار و توان استفاده از منابع موجود به تو کمک می‌کند از هیچ، چیزی بسازی.","مهارت، اعتمادبه‌نفس و ابتکار","ممکن است بخواهی همه‌چیز را کنترل کنی یا انرژی‌ات را پراکنده کنی.","یک هدف را انتخاب کن و انرژی‌ات را روی اجرای آن متمرکز کن.","عصا، جام، شمشیر و سکه"],
+["ابله / رهرو","0 · THE FOOL","آزادی، آغاز و کنجکاوی","روحی آزاد و آماده‌ی تجربه داری. زندگی را می‌خواهی لمس کنی، نه فقط درباره‌اش فکر کنی؛ مسیرهای تازه تو را زنده می‌کنند.","کنجکاوی، انعطاف و شجاعت آغاز","بی‌برنامگی ممکن است تو را به دردسر بیندازد.","سبکی و آزادی‌ات را حفظ کن، اما پیش از جهش نگاهی به زمین زیر پایت بینداز.","کوله، پرتگاه و گل سفید"],
+["قدرت","VIII · STRENGTH","شجاعت آرام و مهار نفس","قدرت تو از سلطه نمی‌آید؛ از توان مهربان ماندن در لحظه‌های دشوار و رام کردن نیروی درونی با صبر می‌آید.","استقامت، شفقت و شجاعت","ممکن است احساساتت را بیش از حد مهار کنی و خستگی را پنهان نگه داری.","قدرت واقعی گاهی یعنی درخواست کمک و نشان دادن آسیب‌پذیری.","شیر، گل و دست‌های آرام"],
+["عدالت","XI · JUSTICE","تعادل، مسئولیت و حقیقت","تو به تناسب میان عمل و پیامد اهمیت می‌دهی. تصمیم‌ها را با وجدان و منطق می‌سنجی و از حقیقت فرار نمی‌کنی.","انصاف، وضوح و مسئولیت‌پذیری","گاهی سخت‌گیری یا قضاوت بیش از حد می‌تواند انعطاف را کم کند.","هم عدالت را نگه دار و هم برای پیچیدگی‌های انسانی جا باز کن.","ترازو، شمشیر و پرده‌ی سنگی"],
+["ارابه","VII · THE CHARIOT","اراده، حرکت و پیروزی","وقتی مقصدی داشته باشی، نیروهای متضاد درونت را به حرکت درمی‌آوری. تو اهل پیشروی و عبور از موانع هستی.","تمرکز، نظم و عزم","ممکن است مسیر را آن‌قدر سریع طی کنی که احساساتت جا بمانند.","گاهی توقف هم بخشی از حرکت به سوی مقصد است.","ارابه، دو نیروی متضاد و ستاره"],
+["عشاق","VI · THE LOVERS","پیوند، انتخاب و ارزش‌ها","تو رابطه و انتخاب را جدی می‌گیری. برایت مهم است که تصمیم‌ها با ارزش‌های قلبی‌ات هماهنگ باشند.","همدلی، صمیمیت و وفاداری به ارزش‌ها","ممکن است برای حفظ پیوند، خودت را فراموش کنی یا در انتخاب مردد بمانی.","عشق سالم، انتخاب خودت را هم در کنار دیگری نگه می‌دارد.","دو پیکر، گل و بال‌های نمادین"],
+["چرخ سرنوشت","X · WHEEL OF FORTUNE","چرخه، فرصت و تغییر","تو می‌دانی زندگی در حرکت است. تغییرات را بخشی از چرخه می‌بینی و می‌توانی در لحظه‌های چرخش، فرصت‌های تازه پیدا کنی.","سازگاری، انعطاف و نگاه کلان","ممکن است بیش از حد منتظر شانس بمانی.","وقتی چرخ می‌چرخد، انتخاب‌های کوچک تو همچنان اهمیت دارند.","چرخ، ستاره‌های چهارگانه و نمادهای باستانی"],
+["مرد آویخته","XII · THE HANGED MAN","توقف، تسلیم و دید تازه","تو توان دیدن جهان از زاویه‌ای متفاوت را داری. گاهی مکث و رها کردن کنترل، راه فهم تازه‌ای باز می‌کند.","صبر، پذیرش و بینش","ممکن است در انتظار یا فداکاری بیش از حد گیر کنی.","مکث کن، اما فراموش نکن که می‌توانی دوباره حرکت کنی.","پیکر وارونه، هاله و شاخه"],
+["اعتدال","XIV · TEMPERANCE","آرامش، ترکیب و هماهنگی","تو از آمیختن تضادها معنا می‌سازی. به جای افراط، به دنبال ریتمی پایدار و راهی میانه می‌گردی.","تعادل، صبر و سازگاری","گاهی برای حفظ آرامش، حقیقت ناراحت‌کننده را عقب می‌اندازی.","تعادل به معنی حذف اختلاف نیست؛ گاهی گفت‌وگوی صادقانه لازم است.","دو جام، آب روان و بال‌ها"],
+["جهان","XXI · THE WORLD","کمال، یکپارچگی و پایان چرخه","تو به دنبال معنا و تصویر کامل هستی. تجربه‌های گوناگون را کنار هم می‌گذاری و از پایان یک مسیر، حس رشد و تمامیت می‌گیری.","دید گسترده، تکمیل و یکپارچگی","ممکن است پایان بی‌نقص بخواهی و شروع تازه را عقب بیندازی.","به خودت اجازه بده فصل را با نقص‌هایش ببندی.","حلقه‌ی برگ، چهار نگهبان و رقص"],
+["خورشید","XIX · THE SUN","زندگی، وضوح و شادی","در تو گرمایی روشن وجود دارد. صداقت و شور زندگی‌ات می‌تواند فضا را روشن کند و ابهام را کنار بزند.","وضوح، سرزندگی و اعتماد","ممکن است همیشه بخواهی مثبت بمانی و غم را پنهان کنی.","هم نور و هم سایه بخشی از تو هستند؛ لازم نیست همیشه درخشان باشی.","خورشید، گل و اسب سفید"],
+["داوری","XX · JUDGEMENT","بیداری، بازنگری و فراخوان","تو به لحظه‌های بیداری و بازنگری اهمیت می‌دهی. گذشته را می‌سنجی تا صدای عمیق‌تر خودت را بشنوی و به مرحله‌ای تازه پاسخ بدهی.","خودآگاهی، صداقت و رشد","ممکن است خودت را با گذشته بیش از حد محکوم کنی.","از گذشته درس بگیر، نه اینکه تا ابد در دادگاه آن زندگی کنی.","شیپور، پیکرهای برخاسته و آسمان"],
+["امپراتور","IV · THE EMPEROR","ساختار، مرز و اقتدار","تو به نظم، مسئولیت و ساختن پایه‌های محکم اهمیت می‌دهی. در شرایط مبهم، می‌توانی تصمیم بگیری و دیگران را هدایت کنی.","ثبات، رهبری و برنامه‌ریزی","گاهی نظم به کنترل‌گری یا انعطاف‌ناپذیری تبدیل می‌شود.","اقتدار سالم به دیگران نیز فرصت رشد و انتخاب می‌دهد.","تخت سنگی، زره و چهار قوچ"],
+["کاهن اعظم","V · THE HIEROPHANT","سنت، آیین و معنا","تو از آیین‌ها، دانش جمعی و چارچوب‌هایی که معنا می‌سازند الهام می‌گیری. دوست داری تجربه را به دانشی قابل انتقال تبدیل کنی.","راهنمایی، تعهد و پیوند با سنت","ممکن است قواعد را بدون پرسش پذیرفته یا به دیگران تحمیل کنی.","به سنت احترام بگذار، اما اجازه بده پرسش و تجربه آن را زنده نگه دارد.","دو ستون، کلیدها و تاج آیینی"]
+];
+const groups=[[0,4,9,8],[0,1,2,3],[4,1,2,3],[4,1,2,8],[0,1,2,5],[4,1,2,5],[0,1,2,6],[0,1,2,8],[0,1,2,3],[0,1,2,5]];
+// answer choices route to 22-card archetype set; each option points at a card.
+const route=[[0,1,2,3],[4,5,6,7],[8,9,10,11],[12,13,14,15],[16,17,18,19],[20,21,0,4],[1,2,3,5],[6,7,8,9],[10,11,12,13],[14,15,16,17]];
+let ix=0,answers=Array(10).fill(null);
+const $=id=>document.getElementById(id);
+function render(){ $('counter').textContent=`پرسش ${ix+1} از ۱۰`;$('bar').style.width=((ix+1)*10)+'%';$('question').textContent=Q[ix][0];$('answers').innerHTML='';Q[ix][1].forEach((s,j)=>{let b=document.createElement('button');b.className='answer'+(answers[ix]===j?' selected':'');b.innerHTML=`<span class="rune">${['☽','✧','✦','♜'][j]}</span><span>${s}</span>`;b.onclick=()=>{answers[ix]=j;render()};$('answers').appendChild(b)});$('back').disabled=ix===0;$('forward').disabled=answers[ix]===null;$('forward').textContent=ix===9?'آشکارسازی کارت ☾':'ادامه ✦'}
+$('back').onclick=()=>{if(ix>0){ix--;render()}};$('forward').onclick=()=>{if(answers[ix]===null)return;if(ix<9){ix++;render()}else result()};
+function result(){let score=Array(22).fill(0);answers.forEach((a,q)=>score[route[q][a]]++);let mx=Math.max(...score),win=score.indexOf(mx);let data=A[win];$('quiz').style.display='none';$('result').style.display='block';$('latin').textContent=data[1];$('name').textContent='کارت تو: '+data[0];$('tag').textContent=data[2];$('details').innerHTML=`<p>${data[3]}</p><h3>✦ نور کارت / نقاط قوت</h3><p>${data[4]}</p><h3>✦ سایه‌ی کارت / چالش‌ها</h3><p>${data[5]}</p><h3>✦ پیام کارت</h3><p>${data[6]}</p><h3>✦ نمادهای باستانی</h3><p>${data[7]}</p>`;$('scores').textContent='نتیجه‌ی نمادین بر اساس انتخاب‌های توست؛ کارت‌های دیگر نیز ممکن است بخشی از شخصیتت را بازتاب دهند.';$('card').innerHTML=svgCard(data,win)}
+function svgCard(d,n){let shapes=[
+`<path d="M160 75a50 50 0 1 0 35 80 45 45 0 0 1-35-80z" fill="#eee"/><path d="M55 280V210l30-25 30 25v70M185 280V210l30-25 30 25v70"/><path d="M150 180q-25 35 0 70 25-35 0-70z"/>`,
+`<path d="M100 150l50-70 50 70z" fill="#eee"/><path d="M110 150l-20 130h120l-20-130z"/><circle cx="150" cy="150" r="25"/><path d="M150 175v100M115 215l35 20 35-20"/>`,
+`<path d="M150 65l20 55h58l-47 35 18 56-49-34-49 34 18-56-47-35h58z" fill="#eee"/><path d="M80 260q70-45 140 0M100 280q50-25 100 0"/>`,
+`<path d="M100 280V140h100v140M85 140l65-50 65 50z"/><path d="M150 90l-20-35 35 15-10-35 30 25-10 30"/><path d="M115 175h70M115 210h70M115 245h70"/>`,
+`<path d="M90 280V110h35v170M175 280V110h35v170"/><circle cx="150" cy="115" r="35"/><path d="M110 170q40-25 80 0l25 110H85z"/>`,
+`<circle cx="150" cy="120" r="35"/><path d="M125 155l-20 125h90l-20-125zM150 155v125M125 195h50M125 230h50"/>`,
+`<path d="M115 105l-30-35 5 55M185 105l30-35-5 55"/><circle cx="150" cy="130" r="40"/><path d="M110 170l-25 110h130l-25-110zM130 125h8M162 125h8"/>`,
+`<circle cx="150" cy="120" r="38"/><path d="M110 165q40-25 80 0l35 115H75z"/><path d="M105 95l15-25 15 25 15-30 15 30 15-25 15 25"/>`,
+`<circle cx="150" cy="115" r="30"/><path d="M115 150l-30 130h130l-30-130zM100 180l-45-35M200 180l45-35M150 150v130"/>`,
+`<circle cx="150" cy="115" r="28"/><path d="M120 150l-30 130h120l-30-130zM115 170l-45 40M185 170l45 40M150 150v130"/>`,
+`<path d="M150 80q40 20 40 60t-40 60q-40-20-40-60t40-60z"/><path d="M95 280q55-45 110 0M150 200v80"/>`,
+`<path d="M100 280V140h100v140M85 140l65-50 65 50z"/><path d="M125 170h50v50h-50zM150 220v60"/>`,
+`<path d="M80 280l70-170 70 170z"/><path d="M110 210h80M125 240h50"/>`,
+`<circle cx="150" cy="130" r="40"/><path d="M110 170l-25 110h130l-25-110zM100 190l-30 30M200 190l30 30"/>`,
+`<circle cx="150" cy="140" r="45"/><path d="M80 280q70-80 140 0M150 185v90"/>`,
+`<path d="M120 90h60l-10 180h-40z"/><path d="M100 130l50-40 50 40M110 200h80"/>`,
+`<path d="M100 260q50-80 100 0M120 280l30-100 30 100"/><circle cx="150" cy="120" r="35"/>`,
+`<ellipse cx="150" cy="180" rx="80" ry="110"/><path d="M150 70v220M70 180h160"/>`,
+`<circle cx="150" cy="120" r="35"/><path d="M110 160l-30 120h140l-30-120z"/><path d="M150 160v120"/>`,
+`<path d="M90 280V130h120v150M75 130l75-55 75 55z"/><path d="M115 170h70M115 210h70"/>`,
+`<path d="M100 280l50-180 50 180z"/><path d="M125 210h50"/>`
+];return `<svg class="tarot" viewBox="0 0 300 460" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="4" width="292" height="452" rx="4" fill="#050505" stroke="#eee" stroke-width="2"/><rect x="13" y="13" width="274" height="434" fill="none" stroke="#777"/><path d="M20 20h25v5M280 20h-25v5M20 440h25v-5M280 440h-25v-5" stroke="#eee" fill="none"/><text x="150" y="40" fill="#eee" font-size="11" text-anchor="middle" letter-spacing="2">${d[1]}</text><g fill="none" stroke="#eee" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">${shapes[n]}</g><text x="150" y="330" fill="#eee" font-size="20" text-anchor="middle">${d[0]}</text><text x="150" y="354" fill="#bbb" font-size="10" text-anchor="middle">${d[2]}</text><path d="M40 380h220M55 395h190M40 410h220" stroke="#777"/><text x="150" y="432" fill="#eee" font-size="16" text-anchor="middle">✦ ☽ ✦</text></svg>`}
+function restart(){ix=0;answers=Array(10).fill(null);$('result').style.display='none';$('quiz').style.display='block';render()}
+render();
+</script></body></html>
